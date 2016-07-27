@@ -7,16 +7,19 @@
     $('#search').on('submit', function retrieveRepositories(event){
         event.preventDefault();
         token = $('#api-key').val();
-        var searchQuery = $('input[value="Find Contributor"]').val();
+        var searchQuery = $('#query').val();
 
-        getRepos(token, searchQuery)
-            .done(function(repositories) {
+        findContributor(token, searchQuery)
+            .done(function searchRepos(repositories) {
                 var repo = selectRandomData(repositories);
                 return getCommits(repo);
             })
-            .done(function(commits){
+            .done(function searchCommits(commits){
                 var commit = selectRandomData(commits);
                 return getUser(commit);
+            })
+            .done(function(user){
+                console.log(user);
             })
             .fail(function(xhr){
                 console.log(xhr);
@@ -24,6 +27,14 @@
     });
 
 
+
+
+
+    /**
+     * [getUser description]
+     * @param  {[type]} commit [description]
+     * @return {[type]}        [description]
+     */
     function getUser(commit) {
         return $.ajax({
             url: 'https://api.github.com/users/' + commit.name,
@@ -70,11 +81,11 @@
     /**
      * Takes the token and searchQuery from user and sends a request to GitHub
      * to retrieve all the repositories that match the search.
-     * @param  {String}     apiKey           the user's secure apiKey
+     * @param  {String}     apiKey          the user's secure apiKey
      * @param  {String}     searchQuery     the repository search term(s)
      * @return {jQuery xhr Object}          holds promises that can be implemented
      */
-    function getRepos(apiKey, searchQuery){
+    function findContributor(apiKey, searchQuery){
         return $.ajax({
             url: 'https://api.github.com/search/repositories?q=' + searchQuery,
             mehtod: 'get',

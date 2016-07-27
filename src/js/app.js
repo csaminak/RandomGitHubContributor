@@ -16,8 +16,7 @@
             })
             .done(function(commits){
                 var commit = selectRandomData(commits);
-                console.log(commit);
-                // return getUser(commit);
+                return getUser(commit);
             })
             .fail(function(xhr){
                 console.log(xhr);
@@ -25,9 +24,14 @@
     });
 
 
-    // function getUser(commit) {
-    //
-    // }
+    function getUser(commit) {
+        return $.ajax({
+            url: 'https://api.github.com/users/' + commit.name,
+            method: 'get',
+            headers: {'Authorization': 'token ' + token},
+            dataType: 'json'
+        });
+    }
 
 
     /**

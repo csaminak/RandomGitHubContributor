@@ -2,7 +2,17 @@
     'use strict';
     window.app = ns = (ns || {});
 
+    var $contributors = $('#contributors ul');
     var token;
+
+    window.addEventListener('load', function(){
+        var name = JSON.parse(localStorage.getItem('contributors')).name;
+        var avatar = JSON.parse(localStorage.getItem('contributors')).avatar;
+        $('#contributors ul')
+            .append('<li><img src="' + avatar +'">\
+                        <cite>' + name + '</cite></li>');
+    });
+
 
     $('#search').on('submit', function findContributor(event){
         event.preventDefault();
@@ -21,6 +31,7 @@
                 var commit = selectRandomCommit(commits);
                 console.log(commit);
                 displayUser(commit);
+                saveContributor(commit);
             })
             .fail(function(xhr){
                 console.log(xhr);
@@ -29,30 +40,32 @@
     });
 
 
+
     /**
      * takes the information from the commit to display the user.
      * @param  {Object}    commit      object with info about commit
      * @return {Void}
      */
     function displayUser(commit) {
-        $('#contributors ul')
+        $contributors
             .append('<li><img src="' + commit.author.avatar_url +'">\
                         <cite>' + commit.author.login + '</cite></li>');
     }
 
 
-    // /**
-    //  * Saves the contributor of every search
-    //  * @param  {[type]} commit [description]
-    //  * @return {[type]}        [description]
-    //  */
-    // function saveContributor(commit){
-    //     var contributor;
-    //     if(!contributor) {
-    //         contributor = {'name': commit.author.login};
-    //     }
-    //     localStorage.setItem('contributors', JSON.stringify(contributor));
-    // }
+    /**
+     * Saves the contributor of every search to localStorage
+     * @param  {[type]}     commit      [description]
+     * @return {Void}
+     */
+    function saveContributor(commit){
+        var contributors;
+
+        if(!contributors) {
+            contributors = {'name': commit.author.login, 'avatar': commit.author.avatar_url};
+        }
+        localStorage.setItem('contributors', JSON.stringify(contributors));
+    }
 
     /**
      * Takes the array of commits and selects a random commit

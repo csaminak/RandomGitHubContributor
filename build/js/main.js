@@ -13,20 +13,28 @@
 
         var searchQuery = $('input[value="Find Contributor"]').val();
 
-        findContributors(token, searchQuery)
-            .done(function(data){
-                console.log(data);
-            })
+        findContributor(token, searchQuery)
+            .done(selectRandomData)
             .fail(function(xhr){
                 console.log(xhr);
             });
     });
 
 
+    /**
+     * Takes the data object and searches the array in that data to select
+     * a random Object within that array to display.
+     * @param  {Object}    data    a list of repositories matching the search
+     * @return {Object}            a random individual repository and it's info
+     */
+    function selectRandomData(data) {
+        var dataList = data.items;
+        console.log(dataList);
+        var i = Math.ceil(Math.random() * (dataList.length - 1));
+        console.log(dataList[i]);
+        return dataList[i];
+    }
 
-    // function selectRandomData(data) {
-    //     return Math.ceil(Math.random() * (data.length - 1));
-    // }
 
     /**
      * Takes the token and searchQuery from user and send a request to GitHub
@@ -35,7 +43,7 @@
      * @param  {String}     searchQuery     the repository search term(s)
      * @return {jQuery xhr Object}          the promises returned
      */
-    function findContributors(token, searchQuery){
+    function findContributor(token, searchQuery){
         return $.ajax({
             url: 'https://api.github.com/search/repositories?q=' + searchQuery,
             mehtod: 'get',

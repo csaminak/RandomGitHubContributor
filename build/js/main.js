@@ -54,8 +54,8 @@
 
 
     /**
-     * Saves the contributor of every search to localStorage
-     * @param  {[type]}     commit      [description]
+     * Saves the contributor of every search to localStorage including their avatar.
+     * @param  {Object}     commit      information about commit including author
      * @return {Void}
      */
     function saveContributor(commit){

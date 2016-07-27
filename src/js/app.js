@@ -20,23 +20,39 @@
                 console.log(commits);
                 var commit = selectRandomCommit(commits);
                 console.log(commit);
+                displayUser(commit);
             })
             .fail(function(xhr){
                 console.log(xhr);
             });
-        // $.ajax('https://api.github.com/users')
-        // .then(function(data) {
-        //     console.log(data);
-        //     return $.ajax('https://api.github.com/repos/jakerella/jquery-mockjax');
-        // })
-        // .then(function(data) {
-        //     console.log(data);
-        // });
+
     });
 
 
+    /**
+     * takes the information from the commit to display the user.
+     * @param  {Object}    commit      object with info about commit
+     * @return {Void}
+     */
+    function displayUser(commit) {
+        $('#contributors ul')
+            .append('<li><img src="' + commit.author.avatar_url +'">\
+                        <cite>' + commit.author.login + '</cite></li>');
+    }
 
 
+    // /**
+    //  * Saves the contributor of every search
+    //  * @param  {[type]} commit [description]
+    //  * @return {[type]}        [description]
+    //  */
+    // function saveContributor(commit){
+    //     var contributor;
+    //     if(!contributor) {
+    //         contributor = {'name': commit.author.login};
+    //     }
+    //     localStorage.setItem('contributors', JSON.stringify(contributor));
+    // }
 
     /**
      * Takes the array of commits and selects a random commit

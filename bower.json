@@ -1,0 +1,17 @@
+{
+  "name": "random-github-contributor",
+  "description": "Learning Objectives",
+  "main": "index.js",
+  "authors": [
+    "Samina Chhatwal"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/csaminak/RandomGitHubContributor",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "name": "random-github-contributor",
+  "version": "1.0.0",
+  "description": "Learning Objectives",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/csaminak/RandomGitHubContributor.git"
+  },
+  "author": "Samina Chhatwal",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/csaminak/RandomGitHubContributor/issues"
+  },
+  "homepage": "https://github.com/csaminak/RandomGitHubContributor#readme"
+}

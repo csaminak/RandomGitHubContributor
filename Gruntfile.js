@@ -30,6 +30,14 @@ module.exports = function(grunt) {
                     files: [{
                         expand: true, cwd: 'src/', src: ['index.html'], dest: 'build/'
                     }]
+                },
+                vendorjs: {
+                    files: [{
+                        expand: true,
+                        cwd: 'src/js/',
+                        src: ['vendor/jquery/dist/jquery.min.js'],
+                        dest: 'build/js/'
+                    }]
                 }
             },
 

@@ -2,15 +2,22 @@
     'use strict';
     window.app = ns = (ns || {});
 
+    var token;
 
     $('#search').on('submit', function retrieveRepositories(event){
         event.preventDefault();
-        var token = $('#api-key').val();
+        token = $('#api-key').val();
         var searchQuery = $('input[value="Find Contributor"]').val();
 
         getRepos(token, searchQuery)
-            .done(function(data) {
-                selectRandomRepo(data);
+            .done(function(repositories) {
+                var repo = selectRandomData(repositories);
+                return getCommits(repo);
+            })
+            .done(function(commits){
+                var commit = selectRandomData(commits);
+                console.log(commit);
+                // return getUser(commit);
             })
             .fail(function(xhr){
                 console.log(xhr);
@@ -18,39 +25,41 @@
     });
 
 
-
-
-
-    // function getCommits(repo) {
-    //     var name = repo.full_name.split('/');
-    //     name = name[0];
-    //     console.log(name);
-    //     return $.ajax({
-    //         url: 'https://api.github.com/repos/' + name + '/' + repo.name + '/commits',
-    //         method: 'get',
-    //         headers: {'Authorization': 'token ' + token},
-    //         dataType: 'json'
-    //     });
+    // function getUser(commit) {
+    //
     // }
+
+
+    /**
+     * Gets all the commits for the selected repo.
+     * @param  {String}     repo    selected repo to look into
+     * @return {Object}             An object that hold a list of commits for user
+     */
+    function getCommits(repo) {
+        var name = repo.full_name.split('/');
+        name = name[0];
+        console.log(name);
+        return $.ajax({
+            url: 'https://api.github.com/repos/' + name + '/' + repo.name + '/commits',
+            method: 'get',
+            headers: {'Authorization': 'token ' + token},
+            dataType: 'json'
+        });
+    }
 
 
     /**
      * Takes the data object and finds items which holds the array of repos
      * and then selects a random object/repo within that array to display.
-     * @param  {Object}    data   a list of repositories matching the search
-     * @return {Promise}          a random individual repo object and it's info
+     * @param  {Object}   data    Object that has a property that holds an array of data
+     * @return {Object}   selectedData    a random selected object that holds data
      */
-    function selectRandomRepo(data) {
-        return new Promise(function(resolve, reject) {
-            if(!data || data.items) {
-                return reject(new Error('Ajax call did not retrieve repos'));
-            }
-            var dataList = data.items;
-            console.log(dataList);
-            var repo = dataList[Math.floor(Math.random() * (dataList.length))];
-            console.log(repo);
-            resolve(repo);
-        });
+    function selectRandomData(data) {
+        var dataList = data.items;
+        console.log(dataList);
+        var selectedData = dataList[Math.floor(Math.random() * (dataList.length))];
+        console.log(selectedData);
+        return selectedData;
     }
 
 

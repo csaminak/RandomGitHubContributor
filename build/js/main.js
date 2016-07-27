@@ -4,26 +4,34 @@
 
     var token;
 
-    $('#search').on('submit', function retrieveRepositories(event){
+    $('#search').on('submit', function findContributor(event){
         event.preventDefault();
         token = $('#api-key').val();
         var searchQuery = $('#query').val();
 
-        findContributor(token, searchQuery)
-            .done(function searchRepos(repositories) {
-                var repo = selectRandomData(repositories);
+        getRepos(token, searchQuery)
+            .then(function searchRepos(repositories) {
+                console.log(repositories);
+                var repo = selectRandomRepo(repositories);
+                console.log(repo);
                 return getCommits(repo);
             })
-            .done(function searchCommits(commits){
-                var commit = selectRandomData(commits);
-                return getUser(commit);
-            })
-            .done(function(user){
-                console.log(user);
+            .then(function (commits){
+                console.log(commits);
+                var commit = selectRandomCommit(commits);
+                console.log(commit);
             })
             .fail(function(xhr){
                 console.log(xhr);
             });
+        // $.ajax('https://api.github.com/users')
+        // .then(function(data) {
+        //     console.log(data);
+        //     return $.ajax('https://api.github.com/repos/jakerella/jquery-mockjax');
+        // })
+        // .then(function(data) {
+        //     console.log(data);
+        // });
     });
 
 
@@ -31,17 +39,12 @@
 
 
     /**
-     * [getUser description]
-     * @param  {[type]} commit [description]
-     * @return {[type]}        [description]
+     * Takes the array of commits and selects a random commit
+     * @param  {Array}     commitsArray     Holds all the commits for a repo
+     * @return {Object}                     An individual commit
      */
-    function getUser(commit) {
-        return $.ajax({
-            url: 'https://api.github.com/users/' + commit.name,
-            method: 'get',
-            headers: {'Authorization': 'token ' + token},
-            dataType: 'json'
-        });
+    function selectRandomCommit(commitsArray) {
+        return commitsArray[Math.floor(Math.random() * (commitsArray.length))];
     }
 
 
@@ -64,17 +67,16 @@
 
 
     /**
-     * Takes the data object and finds items which holds the array of repos
-     * and then selects a random object/repo within that array to display.
-     * @param  {Object}   data    Object that has a property that holds an array of data
-     * @return {Object}   selectedData    a random selected object that holds data
+     * Takes the repositories object and finds the items property, which holds
+     * the array of repos and then selects a random object/repo within
+     * that array to return.
+     * @param  {Object}   repositories    Object that holds an array of repos
+     * @return {Object}   repo            a randomly selected repo
      */
-    function selectRandomData(data) {
-        var dataList = data.items;
-        console.log(dataList);
-        var selectedData = dataList[Math.floor(Math.random() * (dataList.length))];
-        console.log(selectedData);
-        return selectedData;
+    function selectRandomRepo(repositories) {
+        var reposList = repositories.items;
+        var repo = reposList[Math.floor(Math.random() * (reposList.length))];
+        return repo;
     }
 
 
@@ -85,7 +87,7 @@
      * @param  {String}     searchQuery     the repository search term(s)
      * @return {jQuery xhr Object}          holds promises that can be implemented
      */
-    function findContributor(apiKey, searchQuery){
+    function getRepos(apiKey, searchQuery){
         return $.ajax({
             url: 'https://api.github.com/search/repositories?q=' + searchQuery,
             mehtod: 'get',

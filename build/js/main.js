@@ -4,6 +4,7 @@
 
     var $contributors = $('#contributors ul');
     var token;
+    var contributorsList = [];
 
     window.addEventListener('load', function(){
         var name = JSON.parse(localStorage.getItem('contributors')).name;
@@ -59,12 +60,9 @@
      * @return {Void}
      */
     function saveContributor(commit){
-        var contributors;
-
-        if(!contributors) {
-            contributors = {'name': commit.author.login, 'avatar': commit.author.avatar_url};
-        }
-        localStorage.setItem('contributors', JSON.stringify(contributors));
+        var contributors = {'name': commit.author.login, 'avatar': commit.author.avatar_url};
+        contributorsList.push(contributors);
+        localStorage.setItem('contributors', JSON.stringify(contributorsList));
     }
 
     /**

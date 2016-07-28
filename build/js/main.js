@@ -13,7 +13,7 @@
      * @param {Event Handler}   function  loads the previous contributors
      */
     window.addEventListener('load', function loadPreviousContributors(){
-        if (!contributorsList) {
+        if (contributorsList.length === 0) {
             return;
         }
         contributorsList = JSON.parse(localStorage.getItem('contributors'));

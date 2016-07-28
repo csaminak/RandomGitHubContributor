@@ -1,3 +1,7 @@
-
+#contributors img {
+  width: 10%;
+  vertical-align: middle; }
+#contributors li {
+  list-style: none; }
 
 /*# sourceMappingURL=styles.css.map */

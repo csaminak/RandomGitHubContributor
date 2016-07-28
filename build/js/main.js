@@ -6,15 +6,31 @@
     var token;
     var contributorsList = [];
 
-    window.addEventListener('load', function(){
-        var name = JSON.parse(localStorage.getItem('contributors')).name;
-        var avatar = JSON.parse(localStorage.getItem('contributors')).avatar;
-        $('#contributors ul')
-            .append('<li><img src="' + avatar +'">\
-                        <cite>' + name + '</cite></li>');
+
+    /**
+     * Loads the previous contributors that are stored in local storage.
+     * @param {String}          'load'    the event when page loads
+     * @param {Event Handler}   function  loads the previous contributors
+     */
+    window.addEventListener('load', function loadPreviousContributors(){
+        if (!contributorsList) {
+            return;
+        }
+        contributorsList = JSON.parse(localStorage.getItem('contributors'));
+        contributorsList.forEach(function(contributor) {
+            $contributors
+                .append('<li><img src="' + contributor.avatar +'">\
+                            <cite>' + contributor.name + '</cite></li>');
+        });
     });
 
 
+    /**
+     * When user submits a search query they will get a contributor that
+     * committed to a repository with a name that matches their search query.
+     * @param  {String}   'submit'    Event in which 'form' is submitted
+     * @return {void}
+     */
     $('#search').on('submit', function findContributor(event){
         event.preventDefault();
         token = $('#api-key').val();
@@ -22,15 +38,11 @@
 
         getRepos(token, searchQuery)
             .then(function searchRepos(repositories) {
-                console.log(repositories);
                 var repo = selectRandomRepo(repositories);
-                console.log(repo);
                 return getCommits(repo);
             })
             .then(function (commits){
-                console.log(commits);
                 var commit = selectRandomCommit(commits);
-                console.log(commit);
                 displayUser(commit);
                 saveContributor(commit);
             })
@@ -59,7 +71,7 @@
      * @param  {Object}     commit      information about commit including author
      * @return {Void}
      */
-    function saveContributor(commit){
+    function saveContributor(commit) {
         var contributors = {'name': commit.author.login, 'avatar': commit.author.avatar_url};
         contributorsList.push(contributors);
         localStorage.setItem('contributors', JSON.stringify(contributorsList));
@@ -83,7 +95,6 @@
     function getCommits(repo) {
         var name = repo.full_name.split('/');
         name = name[0];
-        console.log(name);
         return $.ajax({
             url: 'https://api.github.com/repos/' + name + '/' + repo.name + '/commits',
             method: 'get',

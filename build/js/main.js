@@ -47,7 +47,17 @@
                 saveContributor(commit);
             })
             .fail(function(xhr){
-                console.log(xhr);
+                var $error = $('.error');
+                if (xhr.status === 401) {
+                    $error
+                        .innerText('apiKey is required, please input the correct id.');
+                } else if (xhr.status < 500 && xhr.status >= 400){
+                    $error
+                        .innerText('You may need to input something to search');
+                } else if (xhr.status >= 500) {
+                    $error
+                        .innerText('I\'m sorry, GitHub cannot be accessed right now.');
+                }
             });
 
     });
@@ -133,8 +143,6 @@
             dataType: 'json'
         });
     }
-
-
 
 
 
